@@ -1,35 +1,41 @@
 ---
-  title: "Using the DMR Scan Package"
-  author: "Christian M Page"
-  package: DMRScan
-  output: 
-    BiocStyle::html_document
-  vignette: >
-    %\VignetteIndexEntry{DMR Scan Vignette}
-    %\VignetteEngine{knitr::rmarkdown}
-    %\VignetteEncoding{UTF-8}  
+title: "Using the DMR Scan Package"
+author: "Christian M Page"
+package: DMRScan
+output: 
+  BiocStyle::html_document
+vignette: |
+  %\VignetteIndexEntry{DMR Scan Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}  
 ---
 
 # Abstract
+
 ### Motivation
+
 DNA methylation plays an important role in human health and disease, and methods 
 for the identification of differently methylated regions are of increasing interest. 
 There is currently a lack of statistical methods which properly address 
 multiple testing, i.e. genome-wide significance for differentially methylated regions.
 
 ### Methods
+
 We introduce a scan statistic (DMRScan), which overcomes these limitations, but 
 don't suffers from the same limitations as alternative R packages, such as 
 [_bumphunter_](http://bioconductor.org/packages/release/bioc/html/bumphunter.html)[1] and[_DMRcate_](http://bioconductor.org/packages/release/bioc/html/DMRcate.html) [2].
 
 ### Data Set
+
 In this package, we have included a small bi-sulfite sequncing example data set, which is an extract 
 of chromosome 22. 
 
 # Work flow and use of DMRScan
+
 ## Data inputs
 
 ### Example data
+
 Start by loading the package and have the methylation data ready in the workspace. 
 The minimal data requirements for this package to run, is a list of numerics, 
 with sequentially ordered test statistics, on which the sliding window is used. 
@@ -42,6 +48,7 @@ data(DMRScan.phenotypes) ## Load phenotype (end-point for methylation data)
 ``` 
 
 ### Test statistics
+
 Note that the DMRScan do not require raw data to be used, only test statistics from a CpG wise model. 
 To generate test statistics for use in DMRScan, we use logistic regression on 
 the example DNA methylation data, and the phenotype data as endpoint, but any other model could as well be used.
@@ -69,6 +76,7 @@ grater flexibility when applying different models to the raw data, and can also
 be used with meta-analysis values, and not only primary studies. 
 
 ### Clustering of the test statics into "Chunks"
+
 To apply the sliding window on a set of test statistics, we cluster them into 
 chunks with not to much space between the probes. The maximum allowed distance 
 between two probes in the same region is given by `max.gap`, and the minimum 
@@ -113,7 +121,9 @@ a list of clusters where the sliding window is operated.
 regions <- makeCpGregions(observations  = observations, chr = pos[,1], pos = pos[,2], 
                                               maxGap = 750, minCpG = 3)
 ``` 
+
 ## DMRScan 
+
 We are now ready to run the sliding window on the clusters. To run a sliding 
 window, a few things beside the clusters are needed:
 - The sizes of the windows. This can be either a single window size, or 
@@ -124,6 +134,7 @@ a sequence of windows to be tested.
 potential settings from the used. 
 
 ### Calculating window thresholds
+
 Three different approaches to estimate the window thresholds is given in the 
 package. The different options are: 
 - A full MCMC model with simulation of null model `model = "mcmc"`, with given 
@@ -166,7 +177,9 @@ window.thresholds.importancSampling <- estimateWindowThreshold(nProbe = n.CpG, w
 window.thresholds.siegmund <- estimateWindowThreshold(nProbe = n.CpG, windowSize = window.sizes, 
                                                           method = "siegmund")
 ``` 
+
 ### Identifying Differentially Methylated Regions
+
 We now have all the data and parameters needed to run the `dmrscan()` function. 
 First using a window threshold estimated with _importanc sampling_, we have
 ```{r res, cache = TRUE, depenson = 'thres'}
@@ -195,6 +208,7 @@ print(dmrscan.results)
 ```
 
 ## Estimating window thresholds with an ARIMA model using MCMC
+
 We can also use an Monte Carlo approach to estimate the window thresholds, in order to model complex or non-standard correlation structures. We use the argument "submethod" to set the function calls to the different sampling functions (e.g. ar(), ma(), arima()), and pases ... to the models argument in these functions. 
 
 ```{r, eval = FALSE}
@@ -210,6 +224,7 @@ print(dmrscan.results)
 ```
 
 ## References
+
 [1] Jaffe AE, Murakami P, Lee H, Leek JT, Fallin DM, Feinberg AP and Irizarry RA (2012). “Bump hunting to identify differentially methylated regions in epigenetic epidemiology studies.” _International journal of epidemiology_, 41(1), pp. 200–209. doi: 10.1093/ije/dyr238.
 
 [2] Peters TJ, Buckley MJ, Statham AL, Pidsley R, Samaras K, Lord RV, Clark SJ and Molloy PL (2015). “De novo identification of differentially methylated regions in the human genome.” _Epigenetics & Chromatin_, 8, pp. 6. http://www.epigeneticsandchromatin.com/content/8/1/6.
@@ -217,33 +232,3 @@ print(dmrscan.results)
 ```{r}
 sessionInfo()
 ```
-
-```
-R version 3.4.2 (2017-09-28)
-Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Sierra 10.12.6
-
-Matrix products: default
-BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
-
-locale:
-[1] C
-
-attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
-
-other attached packages:
-[1] DMRScan_0.01.02
-
-loaded via a namespace (and not attached):
- [1] Rcpp_0.12.13            mvtnorm_1.0-6           lattice_0.20-35        
- [4] IRanges_2.10.5          RcppRoll_0.2.2          bitops_1.0-6           
- [7] MASS_7.3-47             GenomeInfoDb_1.12.3     grid_3.4.2             
-[10] stats4_3.4.2            zlibbioc_1.22.0         XVector_0.16.0         
-[13] S4Vectors_0.14.7        Matrix_1.2-11           RCurl_1.95-4.8         
-[16] parallel_3.4.2          compiler_3.4.2          BiocGenerics_0.22.1    
-[19] GenomicRanges_1.28.6    GenomeInfoDbData_0.99.0
-```
-
-End of vignette

@@ -42,7 +42,7 @@ setGeneric("tVal",function(x)
 setGeneric("id",function(x)
 	standardGeneric("id"))
 
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 setMethod("chr", "GRangesList", function(x){
 	return(rep(do.call(c,lapply(x, function(x)as.character(seqnames(x)@values))), 
 				do.call(c,lapply(x, function(x)seqnames(x)@lengths))))

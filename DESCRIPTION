@@ -1,6 +1,6 @@
 Package: DMRScan
 Title: Detection of Differentially Methylated Regions
-Version: 1.31.0
+Version: 1.31.1
 Authors@R: c( person("CM", "Page", email = "page.ntnu@gmail.com", role =
     c("aut","cre")), person("L", "Vos", email = "Linda.Vos@Kreftregisteret.no",
     role = "aut"), person("TB", "Rounge", email = "", role = "ctb"), person("HF", "Harbo", email = "", role = "ths"), 
@@ -17,7 +17,7 @@ Description: This package detects significant differentially methylated regions
 biocViews: Software, Technology, Sequencing, WholeGenome
 Depends:
     R (>= 3.6.0)
-Imports: Matrix, MASS, RcppRoll,GenomicRanges, IRanges, GenomeInfoDb, methods, mvtnorm, stats, parallel
+Imports: Matrix, MASS, RcppRoll,GenomicRanges, IRanges, Seqinfo, methods, mvtnorm, stats, parallel
 License: GPL-3
 LazyData: true
 Author: Christian M Page [aut, cre],
